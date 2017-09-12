@@ -4,10 +4,11 @@ Peripheral T-cell Non-Hodgkin Lymphoma  classification
 ---
 title: "PTCL classification"
 author:
-- affiliation: University of Milan
-  name: Luca Agnelli
-- affiliation: Wellcome Trust Sanger Institute, UK and University of Milan, IT
-  name: Francesco Maura
+- name: Luca Agnelli
+  affiliation: University of Milan
+- name: Francesco Maura
+  affiliation: Wellcome Trust Sanger Institute, UK and University of Milan, IT
+  
 date: "08/09/2017"
 output:
   html_notebook: default
