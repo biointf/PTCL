@@ -97,7 +97,7 @@ ensembl = useMart( "ensembl", dataset = "hsapiens_gene_ensembl" )
 
 ```{r}
 ### choice 1: import processed matrix
-data.dir="~/Dropbox/on.going.papers/ptcl-nos.INT/paper/script/" # set custom data.dir
+data.dir=getwd() # set custom data.dir
 
 setwd(data.dir)
 load (file.path(data.dir,"/Rmd.files/541_PTCL_batch_adjusted_geo.id.Rdata"))
