@@ -65,7 +65,7 @@ avefc = function (y, log=TRUE, replace= FALSE) {
 	 if (log) y = 2^y
    if (replace) y = y + (1-min(y))
    m = apply(y,1,mean)
-	 y.n = y/m	
+	 y.n = y/m
 	 y.n2 = y.n
 	 y.n2 [y.n2 < 1] = 1/ (y.n2 [y.n2 < 1])
 	 ave.fc = apply (y.n2, 1, mean)
@@ -76,23 +76,23 @@ rle.custom = function (a, logged2 = TRUE, file = NULL, colorbox= NULL, labels=NU
 	a.m <- apply(a,1,median)
 if (logged2) {
 	for (i in 1:dim(a)[2]) {
-   		 a [,i] <-  a [,i] - a.m 
+   		 a [,i] <-  a [,i] - a.m
 	}
 	} else {
 		for (i in 1:dim(a)[2]) {
-   		 a [,i] <-  log (a [,i] / a.m ) 
+   		 a [,i] <-  log (a [,i] / a.m )
 	}
 	}
 	png(file,10240,3840)
 	par(mar=c(10,4,6,2))
-	boxplot (a, ylim= c(-5,5), outline=F, col=colorbox, xlab="pts", names=labels, las=2, cex.axis = 1.5, main="RLE", xlim = c(1,600), cex.main = 5 ) 
+	boxplot (a, ylim= c(-5,5), outline=F, col=colorbox, xlab="pts", names=labels, las=2, cex.axis = 1.5, main="RLE", xlim = c(1,600), cex.main = 5 )
 	legend("bottomright",legend = c(levels(as.factor(pts.info.data$final.molec))),   
 	  fill = colorz, # 6:1 reorders so legend order matches graph
- 	  title = "Legend", 
+ 	  title = "Legend",
  	  cex = 5)
 	#abline(h=0.5, lty=2, col="grey30"); abline(h=-0.5, lty=2, col="grey30")
 	dev.off()
-	
+
 	a.c = apply(a, 2, stats::quantile)
 	return(a.c)
 }
@@ -109,7 +109,7 @@ ensembl = useMart( "ensembl", dataset = "hsapiens_gene_ensembl" )
 
 ```{r}
 ### choice 1: import processed matrix
-data.dir="~/Dropbox/on.going.papers/ptcl-nos.INT/paper/script/" # set custom data.dir
+data.dir=getwd() # set custom data.dir
 
 setwd(data.dir)
 load (file.path(data.dir,"/Rmd.files/541_PTCL_batch_adjusted_geo.id.Rdata"))
@@ -153,7 +153,7 @@ batch.series = as.vector(batch$center)
 # Clinical Data
 
 ```{r}
-pts.info.data <- read.table("./Rmd.files/541_paz_info_MUT.txt", sep="\t", header=TRUE, check.names=FALSE, stringsAsFactors = F) 
+pts.info.data <- read.table("./Rmd.files/541_paz_info_MUT.txt", sep="\t", header=TRUE, check.names=FALSE, stringsAsFactors = F)
 
 # customize colors for categories
 levels(as.factor(pts.info.data$final.molec))
@@ -165,7 +165,7 @@ length(colorz)
 length(temp)
 for (i in 1:length(colorz)) colorx [ which(colorx %in% unlist(temp[i])) ] = colorz[i]
 library(gplots)
-colorx = col2hex(colorx)	
+colorx = col2hex(colorx)
 ```
 
 # Pie Chart with Percentages
@@ -174,7 +174,7 @@ colorx = col2hex(colorx)
 slices <- table(pts.info.data$final.molec)
 lbls <- names(table(pts.info.data$final.molec))
 pct <- round(slices/sum(slices)*100)
-lbls <- paste(lbls, ": ", slices, " (", pct, "%)", sep="" ) # add percents to labels 
+lbls <- paste(lbls, ": ", slices, " (", pct, "%)", sep="" ) # add percents to labels
 par(mfrow=c(1,1))
 par(mar=c(6,6,6,6), xpd=F)
 pie(slices,labels = lbls, init.angle = 0, col=colorz,  main="", cex=0.8, radius=1)
@@ -253,13 +253,13 @@ design<- data.matrix(design, rownames.force = NA)
 # Model fitting
 
 ```{r}
-glm = lmFit(geneExpr2[,rownames(design)], design = design ) 
+glm = lmFit(geneExpr2[,rownames(design)], design = design )
 glm = eBayes(glm)
 F.stat <- classifyTestsF(glm[,-1],fstat.only=TRUE)
 glm$F <- as.vector(F.stat)
 df1 <- attr(F.stat,"df1")
 df2 <- attr(F.stat,"df2")
-if(df2[1] > 1e6){ 
+if(df2[1] > 1e6){
   glm$F.p.value <- pchisq(df1*glm$F,df1,lower.tail=FALSE)
 }else
   glm$F.p.value <- pf(glm$F,df1,df2,lower.tail=FALSE)
@@ -271,15 +271,15 @@ F.stat <- classifyTestsF(rlm[,-1],fstat.only=TRUE)
 rlm$F <- as.vector(F.stat)
 df1 <- attr(F.stat,"df1")
 df2 <- attr(F.stat,"df2")
-if(df2[1] > 1e6){ 
+if(df2[1] > 1e6){
   rlm$F.p.value <- pchisq(df1*rlm$F,df1,lower.tail=FALSE)
 }else
   rlm$F.p.value <- pf(rlm$F,df1,df2,lower.tail=FALSE)
-F.stat <- classifyTestsF(glm[,2:5],fstat.only=TRUE) 
+F.stat <- classifyTestsF(glm[,2:5],fstat.only=TRUE)
 df1 <- attr(F.stat,"df1")
 df2 <- attr(F.stat,"df2")
 F.p.value <- pchisq(df1*F.stat,df1,lower.tail=FALSE)
-R.stat <- classifyTestsF(rlm[,2:5],fstat.only=TRUE) 
+R.stat <- classifyTestsF(rlm[,2:5],fstat.only=TRUE)
 Rall = 1 - 1/(1 + glm$F * (ncol(design)-1)/(nrow(design)-ncol(design)))
 Rgenetics = 1 - 1/(1 + F.stat * 4/(nrow(design)-ncol(design)))
 Pgenetics = 1 - 1/(1 + R.stat * 4/(nrow(design)-ncol(design)))
@@ -323,7 +323,7 @@ kk2<-kk[kk$code=="TRUE",]
 # Extract the list of differentially expressed genes by mutations
 
 ```{r}
-# customize colors in colMutations 
+# customize colors in colMutations
 colMutations = col2hex(c("magenta", "purple","gray60","red","lightblue","green","orange"))
 names(colMutations) <- colnames(design)[-1]
 
@@ -415,7 +415,7 @@ sort(unique(geneannotation1$external_gene_name))
 
 ```
 
-# Generate a heatmap with AITL, PTCL-NOS with the extracted differentially expressed genes. 
+# Generate a heatmap with AITL, PTCL-NOS with the extracted differentially expressed genes.
 
 ```{r}
 gep<- geneExpr[,select_hist$sample.nameNEW]
@@ -451,11 +451,11 @@ d<- data.matrix(mat)
 d = sweep(d,1, apply(d,1,median,na.rm=T))
 results = ConsensusClusterPlus(d,maxK=6,
                                pFeature=1,
-                               title=title, 
+                               title=title,
                                clusterAlg="hc",
-                               innerLinkage="ward.D2", 
-                               finalLinkage="ward.D2", 
-                               distance="euclidean", 
+                               innerLinkage="ward.D2",
+                               finalLinkage="ward.D2",
+                               distance="euclidean",
                                seed=123456789)
 icl = calcICL(results,title=title,plot="png")
 #icl # compare clusters & scores and choose appropriately
@@ -497,17 +497,17 @@ colnames(mat3)<-heat2$Row.names
 mat3= mat3[order(rownames(mat3)),]
 temp_name = getBM( attributes = c("ensembl_transcript_id", "entrezgene", "external_gene_name"), filters = "entrezgene", values = gsub("_at","",rownames(mat3)), mart = ensembl)[,c(2:3)]
 temp_name = temp_name[!duplicated(temp_name[,1]),]
-rownames(mat3) = temp_name [,2] 
+rownames(mat3) = temp_name [,2]
 mat3  <- mat3 - rowMeans(mat3)
 pheatmap(mat3, annotation_col = mylabel.nocol, annotation_colors = list(clusters = c(cluster1= mycol_plus[1], cluster2 = mycol_plus[2], cluster3 = mycol_plus[3], cluster4 = mycol_plus[4]), Histology = c(AITL = "black", PTCL.nos = "orange"), IDH2 = c(MUT=mycol[1], "NA"=mycol[2],WT=mycol[3]), RHOA = c(MUT=mycol[1],"NA"=mycol[2],WT=mycol[3]), TET2 = c(MUT=mycol[1],"NA"=mycol[2],WT=mycol[3]), DNMT3A = c(MUT=mycol[1],"NA"=mycol[2],WT=mycol[3]) ) ,  border_color= NA, color = colorRampPalette(rev(brewer.pal(n = 5 , name = "RdYlBu")))(100), scale = "row", cluster_cols = FALSE, show_colnames= F)
 
 ```
 
-# Analyze sample stratification based on the extracted differentially expressed genes betwee AILT and PTCL-nos and the ALCL ALK-negative 3-gene model. 
+# Analyze sample stratification based on the extracted differentially expressed genes betwee AILT and PTCL-nos and the ALCL ALK-negative 3-gene model.
 
 ```{r}
 select_hist<- pts.info.data[pts.info.data$final.molec == "AITL" | pts.info.data$final.molec == "PTCL.nos" | pts.info.data$final.molec == "ALCL.neg",]
-# Add three classifier genes for ALCL ALK-neg [Agnelli et al, Blood, 2012] 
+# Add three classifier genes for ALCL ALK-neg [Agnelli et al, Blood, 2012]
 # Check on array
 anaplastic_gene<- c("TNFRSF8","BATF3","TMOD1")
 geneannotation2 <- getBM( attributes = c("entrezgene", "external_gene_name"), filters = "external_gene_name", values = anaplastic_gene, mart = ensembl )
@@ -525,11 +525,11 @@ d<- data.matrix(mat2)
 d = sweep(d,1, apply(d,1,median,na.rm=T))
 results = ConsensusClusterPlus(d,maxK=6,
                                pFeature=1,
-                               title=title, 
+                               title=title,
                                clusterAlg="hc",
-                               innerLinkage="ward.D2", 
-                               finalLinkage="ward.D2", 
-                               distance="euclidean", 
+                               innerLinkage="ward.D2",
+                               finalLinkage="ward.D2",
+                               distance="euclidean",
                                seed=123456789)
 icl = calcICL(results,title=title,plot="png")
 #icl # compare clusters & scores and choose appropriately
@@ -569,7 +569,7 @@ colnames(mat3)<-heat2$Row.names
 mat3= mat3[order(rownames(mat3)),]
 temp_name = getBM( attributes = c("ensembl_transcript_id", "entrezgene", "external_gene_name"), filters = "entrezgene", values = gsub("_at","",rownames(mat3)), mart = ensembl)[,c(2:3)]
 temp_name = temp_name[!duplicated(temp_name[,1]),]
-rownames(mat3) = temp_name [,2] 
+rownames(mat3) = temp_name [,2]
 mat3  <- mat3 - rowMeans(mat3)
 par(mfrow=c(1,1))
 pheatmap(mat3, annotation_col = mylabel.nocol, annotation_colors = list(clusters = c(cluster1= mycol_plus[1], cluster2 = mycol_plus[2], cluster3 = mycol_plus[3], cluster4 = mycol_plus[4], cluster5 = mycol_plus[5]), Histology = c(AITL = "black", PTCL.nos = "orange", ALCL.neg= "yellow"), IDH2 = c(MUT=mycol[1], "NA"=mycol[2],WT=mycol[3]), RHOA = c(MUT=mycol[1],"NA"=mycol[2],WT=mycol[3]), TET2 = c(MUT=mycol[1],"NA"=mycol[2],WT=mycol[3]), DNMT3A = c(MUT=mycol[1],"NA"=mycol[2],WT=mycol[3]) ) ,  border_color= NA, color = colorRampPalette(rev(brewer.pal(n = 5 , name = "RdYlBu")))(100), scale = "row", cluster_cols = FALSE, show_colnames= F, row_annotation =3)
@@ -581,17 +581,17 @@ table(heat2$final.molec, heat2$cluster)
 # LOOCV on AILT, ALCL neg, PTCLnos based on 19-gene model
 
 ```{r}
-y = t(mat3) 
+y = t(mat3)
 cl.orig = c()
 for (u in 1:nrow(y)) cl.orig [u] = unlist(strsplit(rownames(y)[u],"\\."))[1]
 
 perm.mother = rownames(y)
-perm.son = combn (perm.mother, length(perm.mother)-1) 
+perm.son = combn (perm.mother, length(perm.mother)-1)
 
 output <- cbind(perm.mother, NA)
 
 for (i in 1:length(perm.mother)) {
-  train <- y [ perm.son[,i], ] 
+  train <- y [ perm.son[,i], ]
   test <- y [ ! ( rownames(y) %in% perm.son[,i]) , ]
   cl <- cl.orig [which(rownames(y)%in%perm.son[,i])]
   z <- lda(train, cl)
@@ -629,7 +629,7 @@ col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_co
 
 par(mar=c(7,5,10,8), xpd=TRUE)
 x<- barplot(t(final3[7:28]), names.arg = rep("", length(final3$final.molec)), cex.names = 0.7, col=col_vector, border=NA)
-legend("topright",legend=colnames(final3)[7:28], col=col_vector, pch=c(15), inset=c(-0.2,0), pt.cex= 0.7, 
+legend("topright",legend=colnames(final3)[7:28], col=col_vector, pch=c(15), inset=c(-0.2,0), pt.cex= 0.7,
 cex = 0.7, bty = "n",  x.intersp = 0.7)
 names_hist<- unique(final3$final.molec)
 col_hist<- c("orange","yellow","dodgerblue2","brown2","forestgreen","black")
@@ -637,7 +637,7 @@ num<- as.numeric(table(final3$final.molec))
 for(i in (1:length(num)))
 {
   segments(x[sum(num[1:i])+1-num[i]], 1.05,x[sum(num[1:i])],1.05,lwd=4, col=col_hist[i])
-  text(x[(sum(num[1:i])-num[i] +1+ sum(num[1:i]))/2], 1.1, names_hist[i], cex=1, srt=0) 
+  text(x[(sum(num[1:i])-num[i] +1+ sum(num[1:i]))/2], 1.1, names_hist[i], cex=1, srt=0)
 }
 
 
@@ -665,7 +665,7 @@ for(i in (7:28))
   for(j in (1:nrow(df_wilk2)))
   {
     segments(df_wilk2$Var1[j], max(k)+j/16, df_wilk2$Var2[j],max(k)+j/16, col = "grey40")
-    p<-df_wilk2$array.table_wilk.[j] 
+    p<-df_wilk2$array.table_wilk.[j]
     if(p<0.00001){p2 = "<0.00001"}else{
     p2<-as.numeric(formatC(p,digits=6,format="f"))}
     pval <- paste("p =",p2,sep=" ")
