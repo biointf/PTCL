@@ -675,3 +675,72 @@ for(i in (7:28))
 }
 
 ```
+
+#Validate profiles on external dataset GSE11946 (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE11946)
+
+```{r}
+# Import matrix
+gse11946matrix = read.csv("./Rmd.files/GSE11946_series_matrix.txt", as.is=T, header=T, row.names = 1, sep="\t")
+
+# Import array annotations
+gpl4133info = read.csv("./Rmd.files/GPL4133-12599.txt", as.is=T, header=T, row.names = 1, sep="\t")
+
+# Select genes
+list_genes
+temp_name = getBM( attributes = c("ensembl_transcript_id", "entrezgene", "external_gene_name"), filters = "entrezgene", values = gsub("_at","",list_genes), mart = ensembl)[,c(2:3)]
+temp_name = temp_name[!duplicated(temp_name[,1]),]
+list16gene = gpl4133info[which(gpl4133info$GENE_SYMBOL %in% temp_name$external_gene_name),]
+rownames(list16gene)
+
+gse11946matrix.16gene = gse11946matrix [rownames(list16gene) ,]
+#rownames(gse11946matrix.16gene) = list16gene$GENE_SYMBOL
+
+# Summarize to single value
+gse11946matrix.16gene.summ = matrix(NA,nrow=length(unique(list16gene$GENE_SYMBOL)),ncol=ncol(gse11946matrix.16gene))
+for (i in 1:ncol(gse11946matrix.16gene)) gse11946matrix.16gene.summ [,i] = tapply(gse11946matrix.16gene[,i],list16gene$GENE_SYMBOL,median)
+rownames(gse11946matrix.16gene.summ) = sort(unique(list16gene$GENE_SYMBOL))
+colnames(gse11946matrix.16gene.summ) = colnames(gse11946matrix.16gene)
+# gse11946col = c(rep("white",7),rep("orange",12), rep("black",15))
+
+# Heatmap
+mylabel.gse11946 = data.frame(c(rep("GD",7),rep("PTCL.nos",12), rep("AITL",15))); colnames(mylabel.gse11946) = "type"; rownames(mylabel.gse11946) = colnames(gse11946matrix.16gene.summ)
+mat4 = gse11946matrix.16gene.summ
+mat4 = mat4 - rowMeans(mat4)  
+pheatmap(mat4, annotation_col = mylabel.gse11946, annotation_colors = list( type = c(AITL = "black", PTCL.nos = "orange", GD = "white")),  border_color= NA, color = colorRampPalette(rev(brewer.pal(n = 5 , name = "RdYlBu")))(100), scale = "row", show_colnames= F, clustering_method = "ward.D2",clustering_distance_cols = "euclidean")
+
+# Heatmap w/o gammadelta
+mylabel.gse11946 =  data.frame(c(rep("PTCL.nos",12), rep("AITL",15))); colnames(mylabel.gse11946) = "type"; rownames(mylabel.gse11946) = colnames(gse11946matrix.16gene.summ)[-c(1:7)]
+mat4 = gse11946matrix.16gene.summ [,-c(1:7)]
+mat4 = mat4 - rowMeans(mat4)  
+pheatmap(mat4, annotation_col = mylabel.gse11946, annotation_colors = list( type = c(AITL = "black", PTCL.nos = "orange")),  border_color= NA, color = colorRampPalette(rev(brewer.pal(n = 5 , name = "RdYlBu")))(100), scale = "row", show_colnames= F, clustering_method = "ward.D2", clustering_distance_cols = "euclidean")
+
+# LOOOCV
+
+mat4 = gse11946matrix.16gene.summ [,-c(1:7)]
+y = t(mat4)
+cl.orig = mylabel.gse11946$type
+
+perm.mother = rownames(y)
+perm.son = combn (perm.mother, length(perm.mother)-1)
+
+output <- cbind(perm.mother, NA)
+
+for (i in 1:length(perm.mother)) {
+  train <- y [ perm.son[,i], ]
+  test <- y [ ! ( rownames(y) %in% perm.son[,i]) , ]
+  cl <- cl.orig [which(rownames(y)%in%perm.son[,i])]
+  z <- lda(train, cl)
+  p <- predict(z,test)$class
+  output  [ setdiff(1:27, which( rownames(y) %in% perm.son[,i]) ) , 2  ] = as.character(p)
+#  output  [ output[,1] == rownames(test) , 3  ] = z$scaling [1,1]
+#  output  [ output[,1] == rownames(test) , 4  ] = z$scaling [2,1]
+#  output  [ output[,1] == rownames(test) , 5  ] = z$scaling [3,1]
+}
+
+colnames(output) = c("true","LOOCV.predicted")
+output
+
+v.ct = matrix(c(3,8,13,4),2,2, dimnames=list(c("AILT","PTCLnos"),c("cluster1","cluster2")))
+fisher.test(v.ct)
+
+```
