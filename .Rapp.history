@@ -1,0 +1,768 @@
+b = c(1:7,10:8,15:11,16:20)
+b
+cor.test(a,b)
+b = c(1:2,17,4:10,15:11,16,3,18:20)
+b
+cor.test(a,b)
+c=a
+d = rbind (a,b,c)
+d
+e = c(1:5,10:15,9:6,16:20)
+e
+length(e)
+cor.test (a,e)
+cor.test (c,e)
+cor.test (b,e)
+f = apply (d, 2, median)
+f
+cor.test(f,e)
+source("https://bioconductor.org/biocLite.R")#
+biocLite("DESeq")
+browseVignettes("DESeq")
+?write.table
+plot(1:10, xlim=c(0.001,10), ylim=c(0.001,10), log="xy")
+plot(0:10, xlim=c(0.001,10), ylim=c(0.001,10), log="xy")
+plot(0.000001:10, xlim=c(0.000001,10), ylim=c(0.000001,10), log="xy")
+Genomic <- c(74.79, 49.01, 60.58, 1.76, 43.77, 13.03, 61.02, 39.68, 17.69, 13.86, 5.51, 5.93, 7.33, 2.73, 32.3, 19.59, 45.79, 0.89, 46.4, 4.21, 10.49, 6.08, 7.97, 60.92, 34.37, 37.69, 31.12, 4.61, 34.33, 39.81, 38.5, 54, 2.79, 36.7, 35.62, 14.72, 32.13, 30.4, 4.29, 26.49, 65.82, 34.3, 28.38, 52.94, 47.86, 1.42, 10.24, 34.99, 35.2, 15.81, 62.65, 4.16, 81.91, 86.68, 40.28, 17.54, 37.13, 40.93, 67.75, 68.37, 16.51, 22.29, 4.08, 17.39, 27.42, 9.27, 25.51, 26.94, 28.2, 31.03, 1.39, 9.83, 32.08, 56.68, 29.08, 26.74, 28.79, 26.14, 21.8, 36.43, 20.92, 22.05, 3.15, 22.36, 20.27, 13.26, 21.71, 22.35, 36.88, 42.16, 43.66, 44.75, 48.29, 51.21, 48.84, 49.7, 84.27, 14.29, 23.02, 18.09, 12.78, 30.53, 29.53, 14.35, 33.05)#
+#
+Plasma <- c(53.93, 29.87, 34.69, 0, 8.25, 1.9, 14.97, 3.77, 0, 0, 0, 0, 0, 0, 0, 0, 6.99, 0, 6.11, 3.34, 28.19, 12.01, 15.72, 0.87, 0.62, 1.99, 0.95, 0, 1.7, 1.2, 2.69, 0, 0, 11.47, 5.62, 0.72, 6.3, 6.22, 0.47, 1.79, 8.59, 1.61, 1.25, 1.67, 2.4, 0, 0, 0.17, 1.15, 0, 3.99, 0, 0.51, 1.35, 19.17, 10.2, 19.97, 13.59, 35.23, 32.01, 41.25, 33.5, 13.49, 43.19, 36.75, 13.91, 33.43, 40.48, 36.97, 37.3, 13.71, 15.77, 32.09, 80.41, 40.27, 33.78, 39.52, 4.44, 5.6, 5.97, 3.27, 5.68, 0, 8.07, 5.02, 1.77, 5.79, 9.89, 28.94, 23.53, 10.14, 11.11, 18.17, 18.89, 19.38, 8.12, 39.6, 17.39, 31.31, 22.44, 16.21, 35.3, 32.85, 18.8, 48.55)
+genomic <- c(74.79, 49.01, 60.58, 1.76, 43.77, 13.03, 61.02, 39.68, 17.69, 13.86, 5.51, 5.93, 7.33, 2.73, 32.3, 19.59, 45.79, 0.89, 46.4, 4.21, 10.49, 6.08, 7.97, 60.92, 34.37, 37.69, 31.12, 4.61, 34.33, 39.81, 38.5, 54, 2.79, 36.7, 35.62, 14.72, 32.13, 30.4, 4.29, 26.49, 65.82, 34.3, 28.38, 52.94, 47.86, 1.42, 10.24, 34.99, 35.2, 15.81, 62.65, 4.16, 81.91, 86.68, 40.28, 17.54, 37.13, 40.93, 67.75, 68.37, 16.51, 22.29, 4.08, 17.39, 27.42, 9.27, 25.51, 26.94, 28.2, 31.03, 1.39, 9.83, 32.08, 56.68, 29.08, 26.74, 28.79, 26.14, 21.8, 36.43, 20.92, 22.05, 3.15, 22.36, 20.27, 13.26, 21.71, 22.35, 36.88, 42.16, 43.66, 44.75, 48.29, 51.21, 48.84, 49.7, 84.27, 14.29, 23.02, 18.09, 12.78, 30.53, 29.53, 14.35, 33.05)#
+#
+plasma <- c(53.93, 29.87, 34.69, 0, 8.25, 1.9, 14.97, 3.77, 0, 0, 0, 0, 0, 0, 0, 0, 6.99, 0, 6.11, 3.34, 28.19, 12.01, 15.72, 0.87, 0.62, 1.99, 0.95, 0, 1.7, 1.2, 2.69, 0, 0, 11.47, 5.62, 0.72, 6.3, 6.22, 0.47, 1.79, 8.59, 1.61, 1.25, 1.67, 2.4, 0, 0, 0.17, 1.15, 0, 3.99, 0, 0.51, 1.35, 19.17, 10.2, 19.97, 13.59, 35.23, 32.01, 41.25, 33.5, 13.49, 43.19, 36.75, 13.91, 33.43, 40.48, 36.97, 37.3, 13.71, 15.77, 32.09, 80.41, 40.27, 33.78, 39.52, 4.44, 5.6, 5.97, 3.27, 5.68, 0, 8.07, 5.02, 1.77, 5.79, 9.89, 28.94, 23.53, 10.14, 11.11, 18.17, 18.89, 19.38, 8.12, 39.6, 17.39, 31.31, 22.44, 16.21, 35.3, 32.85, 18.8, 48.55)
+rm(Genomic)
+rm(Plasma)
+install.packages("plotrix")
+library(plotrix)
+plot(plasma, genomic, log='xy', xlim=c(min(plasma),max(plasma)), xaxt='n', col=NA)#
+axis(1, at=10^(-1:4), labels=c(0, 10^(0:4)))
+plasma2 = ifelse (plasma == 0, 0.00000001, plasma)#
+plot(plasma2, genomic, log='xy', xlim=c(min(plasma2),max(plasma2)), xaxt='n', col=NA)#
+axis(1, at=10^(-1:4), labels=c(0, 10^(0:4)))
+plot(plasma2, genomic, log='xy', xlim=c(min(plasma2),max(plasma2)), xaxt='n', col="red")
+axis(1, at=c(0,10^(0:4)), labels=c(0, 10^(0:4)))
+axis(1, at=c(1,10^(0:4)), labels=c(0, 10^(0:4)))
+axis(1, at=c(0.00000001,10^(0:4)), labels=c(0, 10^(0:4)))
+plot(plasma2, genomic, log='xy', xlim=c(min(plasma2),max(plasma2)), xaxt='n', yaxt ='n', col="red", pch=19)
+axis(1, at=c(0.00000001,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(0.00000001,10^(0:4)), labels=c(0, 10^(0:4)))
+?plotrix
+plot(plasma2, genomic, log='xy', xlim=c(0,max(plasma2)), ylim=c(0,max(genomic)), xaxt='n', yaxt ='n', col="red", pch=19)#
+axis(1, at=c(0.00000001,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(0.00000001,10^(0:4)), labels=c(0, 10^(0:4)))
+plasma2 = ifelse (plasma == 0, 10^-10, plasma)#
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), xaxt='n', yaxt ='n', col="red", pch=19)#
+axis(1, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))
+?plot
+axis.break(breakpos = 0.4)
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), xaxp=1, yaxp=1, xaxt='n', yaxt ='n', col="red", pch=19)#
+axis(1, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), xaxp=c(0,100,10), yaxp=1, xaxt='n', yaxt ='n', col="red", pch=19)
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), xaxp=c(0,100,10), yaxp=1, xaxt='n', yaxt ='n', col="red", pch=19, xlog=TRUE)
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)),  yaxp=1, xaxt='n', yaxt ='n', col="red", pch=19, xlog=TRUE)
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)),  xaxt='n', yaxt ='n', col="red", pch=19, xlog=TRUE)
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)),  xaxt='n', yaxt ='n', col="red", pch=19, ylog=TRUE, xlog=TRUE)
+axis(1, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))
+axis(2, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))
+plot(plasma2, genomic,  xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)),  xaxt='n', yaxt ='n', col="red", pch=19)
+axis(1, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)),  xaxt='n', yaxt ='n', col="red", pch=19)
+axis(1, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))
+axis(2, at=c(10^-10,10^(0:4)), labels=c(0, 10^(0:4)))
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), col="red", pch=19, xaxs="i",yxas="i)#" xaxaxt='n', yaxt ='n', )
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), col="red", pch=19, xaxs="i",yxas="i")#" xaxaxt='n', yaxt ='n', )
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), col="red", pch=19, xaxs="i",yaxs="i")#" xaxaxt='n', yaxt ='n', )
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', )#
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))
+plasma2 = ifelse (plasma == 0, 10^-1, plasma)
+plot(plasma2, genomic, log='xy', xlim=c(10^-10,max(plasma2)), ylim=c(10^-10,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', )#
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))
+10^-1
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,max(plasma2)), ylim=c(10^-1,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', )#
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)),xaxs="s")
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)),yaxs="s")
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,max(plasma2)), ylim=c(10^-1,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', )#
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)),xaxs="s")#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)),yaxs="s")
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,max(plasma2)), ylim=c(10^-1,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', )#
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)),xaxs="i")#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)),yaxs="i")
+library(ggplot2)#
+library(scales)
+df = structure(list(genomic,plasma))
+df
+?ggplot
+ggplot(df, aes(x=plasma2, y=genomic) +#
+ #Axis log transformation:#
+  annotation_logticks(scaled = TRUE,sides="b") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = trans_format("log10", math_format(10^.x))) + #
+  #Axes labels:#
+  labs(x="dosage (log scale)", y="response",size=1) +#
+    facet_grid(~facet, scales = 'free', space = 'free') +#
+  theme(strip.background = element_blank(),#
+        strip.text = element_blank())
+)
+ggplot(df, aes(x=plasma2, y=genomic) +#
+ #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="b") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="dosage (log scale)", y="response",size=1) +#
+    facet_grid(~facet, scales = 'free', space = 'free') +#
+  theme(strip.background = element_blank(),#
+        strip.text = element_blank())#
+)
+?aes
+df = structure(list(plasma2,genomic))
+ggplot(df, aes(x=plasma2, y=genomic) +#
+ #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="b") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="dosage (log scale)", y="response",size=1) +#
+    facet_grid(~facet, scales = 'free', space = 'free') +#
+  theme(strip.background = element_blank(),#
+        strip.text = element_blank())#
+)
+aes(x=plasma2, y=genomic)
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="b") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="dosage (log scale)", y="response",size=1) +#
+    facet_grid(~facet, scales = 'free', space = 'free') +#
+  theme(strip.background = element_blank(),#
+        strip.text = element_blank())#
+)
+?ggplot
+df = data.frame(plasma2,genomic))
+df = data.frame(plasma2,genomic)
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="b") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="dosage (log scale)", y="response",size=1) +#
+    facet_grid(~facet, scales = 'free', space = 'free') +#
+  theme(strip.background = element_blank(),#
+        strip.text = element_blank())#
+)
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="b") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) +#
+)
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="b") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+ggplot(df)
+?annotation_logticks
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+c(0, math_format()(0:10)))
+c(0, math_format()(0:10))
+scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10)))
+df
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+df = as.data.frame(list(plasma2,genomic)
+)
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+df
+df = as.data.frame(plasma2,genomic)
+df = data.frame(plasma2,genomic)
+str(df)
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10),#
+                labels = c(0, math_format()(0:10))) + #
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+as.vector(df[,1])
+as.vector(df[,2])
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+ggplot(df +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+ggplot(df +#
+  geom_point(df)#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+ggplot(df +#
+  geom_point(df) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+ggplot(df, aes(x=plasma2, y=genomic ) +#
+  geom_point(df) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+df = data.frame(plasma2,genomic)	#
+#
+ggplot(df, aes_(x=plasma2, y=genomic ) +#
+  geom_point(df) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1) #
+  )
+ggplot(df, aes(x=plasma2, y=genomic )) +#
+  geom_point(df) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+ggplot(df, aes(x=plasma2, y=genomic )) +#
+  geom_point(df, aes(x=plasma2, y=genomic )) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+ggplot(df) +#
+  geom_point(df, aes(x=plasma2, y=genomic )) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+ggplot(df, aes(x=plasma2, y=genomic )) +#
+  geom_point(df) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+ggplot( aes(x=plasma2, y=genomic , data =df)) +#
+  geom_point() +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+head(df)
+ggplot( aes(x="plasma2", y="genomic" , data ="df")) +#
+  geom_point() +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+mtcars
+wt
+?aes
+ggplot( df, aes(x="plasma2", y="genomic" )) +#
+  geom_point() +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,max(plasma2)), ylim=c(10^-1,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', )#
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)),xaxs="i")#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)),yaxs="i")
+ggplot( df, aes(x="plasma2", y="genomic" )) +#
+  geom_point(df) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+ggplot( df, aes(x="plasma2", y="genomic" )) +#
+  geom_point(plasma2, genomic) +#
+  #Axis log transformation:#
+  annotation_logticks(scaled = TRUE, sides="bl") + #
+  scale_x_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  scale_y_log10(breaks = 10^(-1:10), labels = c(0, math_format()(0:10))) +#
+  #Axes labels:#
+  labs(x="plasma", y="genomic",size=1)
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,max(plasma2)), ylim=c(10^-1,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', ,xaxs="i" ,yaxs="i")#
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,max(plasma2)), ylim=c(10^-1,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', xaxs="i" ,yaxs="i")
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,max(plasma2)), ylim=c(10^-1,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n')#, xaxs="i" ,yaxs="i")
+?par
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,max(plasma2)), ylim=c(10^-1,max(genomic)), col="red", pch=19, xaxt='n', yaxt ='n', xaxs="i" ,yaxs="i", bty="n")
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))
+plot(plasma2, genomic, log='xy', xlim=c(10^-1,110), ylim=c(10^-1,110), col="red", pch=19, xaxt='n', yaxt ='n', xaxs="i" ,yaxs="i", bty="n")#
+axis(1, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))#
+axis(2, at=c(10^-1,10^(0:4)), labels=c(0, 10^(0:4)))
+a = scan("~/Downloads/GSE51521_RAW/md5codeALL", what="c")
+b = scan("~/Documents/DATI/PTCL.nos/GSE6338-GSE19067-GSE19069-GSE40160-GSE58445-GSE65823-ETABM702-ETABM783/md5code541", what="c")
+intersect(a,b)
+a
+library(httr)
+library(curl)
+?curl
+i = 1
+con <- curl(paste0("https://xkcd.com/",i))
+readLines(con)
+grep (".png",readLines(con))
+grep ("hotlinking",readLines(con))
+head(com)
+head(con)
+con
+img.url = grep ("hotlinking",readLines(con))
+strsplit(img.url," "))
+strsplit(img.url," ")
+img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]
+strsplit(img.url," ")
+tail(strsplit(img.url," "))
+unlist(strsplit(img.url," ")))
+unlist(strsplit(img.url," "))
+img.url = unlist(strsplit(img.url," "))[5]
+img.url
+first = 1#
+last = 20#
+url = "https://xkcd.com/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]	#
+	print(img.url)#
+}
+first = 1	880#
+last = 1888#
+url = "https://xkcd.com/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]	#
+	print(img.url)#
+}
+first = 1880#
+last = 1888#
+url = "https://xkcd.com/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]	#
+	print(img.url)#
+}
+unlist(strsplit(img.url,"/"))
+name = unlist(strsplit(img.url,"/"))[5]
+name
+paste0("wget ",img.url, " -P ",dest, " -O ",i,"_",name)
+dest = "~/Dropbox/doc.LA/xkcd/"
+paste0("wget ",img.url, " -P ",dest, " -O ",i,"_",name)
+first = 1#
+last = 10#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	system(paste0("wget ",img.url, " -P ",dest, " -O ",i,"_",name))#
+}
+first = 1#
+last = 10#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("(","\\(",name); name = gsub(")","\\)",name)#
+	system(paste0("wget ",img.url," -O ",dest,i,"_",name))#
+}
+first = 1#
+last = 10#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("(","\\(",name); name = gsub(")","\\)",name)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+}
+first = 1#
+last = 10#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	#name = gsub("(","\\(",name); name = gsub(")","\\)",name)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+}
+i=1
+con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]
+paste0("wget '",img.url,"' -O ",dest,i,"_",name)
+first = 1#
+last = 10#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	#name = gsub("(","\\(",name); name = gsub(")","\\)",name)#
+	system(paste0("wget '",img.url,"' -O '",dest,i,"_",name,"'"))#
+}
+i = 1
+con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("\\(","\\\(",name); name = gsub("\\)","\\\)",name)
+name = gsub("(","\(",name)
+name
+name = gsub("\(","\\(",name)
+name
+gsub("\(","\\(",name, perl=TRUE)
+gsub("\\(","\\\(",name, perl=TRUE)
+gsub("\\(","",name, perl=TRUE)
+name = gsub("\\(","",name, perl=TRUE)
+system(paste0("wget '",img.url,"' -O '",dest,i,"_",name,"'"))
+name = gsub("\\)","",name, perl=TRUE)
+system(paste0("wget '",img.url,"' -O '",dest,i,"_",name,"'"))
+system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))
+first = 1#
+last = 1888#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("\\(","",name, perl=TRUE)#
+	name = gsub("\\)","",name, perl=TRUE)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+}
+first = 405#
+last = 1888#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("\\(","",name, perl=TRUE)#
+	name = gsub("\\)","",name, perl=TRUE)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+}
+first = 1037#
+last = 1888#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("\\(","",name, perl=TRUE)#
+	name = gsub("\\)","",name, perl=TRUE)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+}
+img.url
+i = 1037
+con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]
+img.url
+first = 1038#
+last = 1888#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("\\(","",name, perl=TRUE)#
+	name = gsub("\\)","",name, perl=TRUE)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+}
+first = 1160#
+last = 1888#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("\\(","",name, perl=TRUE)#
+	name = gsub("\\)","",name, perl=TRUE)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+}
+curl_fetch_memory
+?curl
+closeAllConnections()
+first = 1160#
+last = 1888#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("\\(","",name, perl=TRUE)#
+	name = gsub("\\)","",name, perl=TRUE)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+}
+first = 1347#
+last = 1888#
+url = "https://xkcd.com/"#
+dest = "~/Dropbox/doc.LA/xkcd/"#
+#
+for (i in first:last) {#
+	con <- curl(paste0(url,i))#
+	img.url = readLines(con) [ grep ("hotlinking",readLines(con)) ]#
+	img.url = unlist(strsplit(img.url," "))[5]#
+	name = unlist(strsplit(img.url,"/"))[5]	#
+	name = gsub("\\(","",name, perl=TRUE)#
+	name = gsub("\\)","",name, perl=TRUE)#
+	system(paste0("wget '",img.url,"' -O ",dest,i,"_",name))#
+	closeAllConnections()	#
+}
+table(mtcars$gear)
+a=c(4,0,8,0,4,0,7,0,8,3)
+chisq.test(a)
+a
+a=matrix(c(4,0,8,0,4,0,7,0,8,3),5,2)
+a
+a=matrix(c(4,0,8,0,4,0,7,0,8,3),2,5)
+a
+chisq.test(a)
+a = array(c(matrix(c(4,0,0,30),2,2),matrix(c(8,0,0,26),2,2),matrix(c(4,0,0,30),2,2),matrix(c(7,0,0,27),2,2),matrix(c(8,0,3,27),2,2))
+)
+a
+a = array(c(matrix(c(4,0,0,30),2,2),matrix(c(8,0,0,26),2,2),matrix(c(4,0,0,30),2,2),matrix(c(7,0,0,27),2,2),matrix(c(8,0,3,27),2,2)), dim=c(2,2,5))
+a
+mantelhaen.test(a, alternative = "two.sided")
+install.packages("drexplorere")
+install.packages("drexplorer")
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+dir(path="/Library/Frameworks/R.framework/Versions/3.3/Resources/library/")
+a = dir(path="/Library/Frameworks/R.framework/Versions/3.3/Resources/library/")
+install.packages(a)
+installed.packages()
+library(devtools)
+install_github("nickytong/drexplorer")
+source("http://bioconductor.org/biocLite.R")#
+biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore"))#
+install.packages("WGCNA")
+install.packages("BWidgets")
+install.packages("BWidget")
+library(shiny)#
+runGitHub("SAM", "MikeJSeo")
+source("https://bioconductor.org/biocLite.R")#
+biocLite("GSEABase")
+setwd("/Users/emagene/Dropbox/codes/github/PTCL/")
+library("tmod")#
+library("limma")#
+library(affy)#
+library(ComplexHeatmap)#
+library(plot3D)#
+library(gplots)#
+library(circlize)#
+library(AnnotationDbi)#
+library(lattice)#
+library(org.Hs.eg.db)#
+library(MASS)#
+library(RColorBrewer)#
+library(AnnotationDbi)#
+library(rglwidget)#
+###library(hgu133plus2hsentrezgcdf)#
+library(VennDiagram)#
+library(org.Hs.eg.db)#
+library(GenomicRanges)#
+library(GenomicFeatures)#
+library(rtracklayer)#
+library(biomaRt)#
+library(glmnet)#
+library(survival)#
+library(Hmisc)#
+library(ConsensusClusterPlus)#
+library(pheatmap)#
+library(ggplot2)#
+library(heatmap.plus)#
+library(rgl)#
+library(limma)#
+library(tmod)
+install.packages("tmod")
+install.packages("rglwidget")
+install.packages("plot3d")
+install.packages("plot3D")
+library(plot3D)
+library(tmod)
+library(rglwidget)
+final<- read.delim("aitl_nos_alcl_clsutering.txt",sep="\t",header = T,stringsAsFactors = F)#
+final2<- final[,c("Row.names,hist,cluster")]#
+head(final2)
+head(final)
+final2<- final[,c("Row.names","hist","cluster")]#
+head(final2)
+load ("./Rmd.files/541_PTCL_batch_adjusted_geo.id.Rdata")#
+geneExpr = adj.data#
+geneExpr2<- geneExpr[,colnames(geneExpr)%in%final2$Row.names ]#
+geneExpr2<- geneExpr2[,final2$Row.names]#
+ensembl = useMart( "ensembl", dataset = "hsapiens_gene_ensembl" )#
+hgnc_swissprot <- getBM(attributes=c('entrezgene','hgnc_symbol','hgnc_id'),filters = 'entrezgene', #
+                        values = gsub("_at","",rownames(geneExpr2)),mart = ensembl)#
+head(hgnc_swissprot)#
+geneExpr3<- as.data.frame.matrix(geneExpr2[which(rownames(geneExpr2) %in% paste0(hgnc_swissprot$entrezgene,"_at")),])#
+dim(geneExpr3)#
+geneExpr3$geneid<-rownames(geneExpr3) #
+hgnc_swissprot$geneid<- paste0(hgnc_swissprot$entrezgene,"_at")#
+geneExpr4<- merge(geneExpr3, hgnc_swissprot, by="geneid")#
+#
+hgnc_swissprot2<- hgnc_swissprot[hgnc_swissprot$entrezgene %in% gsub("_at","",row.names(geneExpr3 )),]#
+kk<- as.data.frame(table(hgnc_swissprot2$hgnc_symbol))#
+kk2<- kk[kk$Freq>1,]#
+#
+hgnc_swissprot2<- unique(hgnc_swissprot[!hgnc_swissprot$hgnc_symbol %in% c(as.character(kk2$Var1),"BHLHB9", "ZNF468" ,"CALM1",  "ZBED6"), ])#
+geneExpr3<- geneExpr4[geneExpr4$geneid %in% paste0(hgnc_swissprot2$entrezgene,"_at"),]#
+geneExpr4<- geneExpr3[! geneExpr3$hgnc_symbol %in% c("","BHLHB9","ZNF468","CALM1","ZBED6"),]#
+dim(geneExpr3)#
+dim(geneExpr4)#
+#
+rownames(geneExpr4)<- geneExpr4$hgnc_symbol#
+geneExpr4<- geneExpr4[,-c(1,342,343,344)]#
+mat<- as.matrix(geneExpr4)#
+#
+design <- model.matrix(~ 0+factor(final2$cluster)) ##### create matrix#
+colnames(design)<-paste0("Cluster_",c(1:5))#
+#
+contrast.matrix <- makeContrasts(#Cluster_2-Cluster_1, Cluster_3-Cluster_1,Cluster_4-Cluster_1, Cluster_5-Cluster_1,#
+                                 #Cluster_3-Cluster_2, Cluster_4-Cluster_2, Cluster_5-Cluster_2, #
+                                 #Cluster_4-Cluster_3, Cluster_5-Cluster_3,#
+                                 #Cluster_4-Cluster_5,#
+                                  "Cluster_1-(Cluster_2 + Cluster_3 + Cluster_4 + Cluster_5)",#
+                                  "Cluster_2-(Cluster_1 + Cluster_3 + Cluster_4 + Cluster_5)",#
+                                  "Cluster_3-(Cluster_1 + Cluster_2 + Cluster_4 + Cluster_5)",#
+                                  "Cluster_4-(Cluster_1 + Cluster_2 + Cluster_3 + Cluster_5)",#
+                                  "Cluster_5-(Cluster_1 + Cluster_2 + Cluster_3 + Cluster_4)",#
+                                 levels=design)#
+##### #
+fit1 <- lmFit(mat, design)#
+fit2 <- contrasts.fit(fit1, contrast.matrix)#
+fit <- eBayes(fit2)
+tt <- topTable(fit, coef=i, number=Inf, genelist=rownames(geneExpr3))
+tt <- topTable(fit, coef=1, number=Inf, genelist=rownames(geneExpr3))
+tt
+contrast.matrix <- makeContrasts(#Cluster_2-Cluster_1, Cluster_3-Cluster_1,Cluster_4-Cluster_1, Cluster_5-Cluster_1,#
+                                 #Cluster_3-Cluster_2, Cluster_4-Cluster_2, Cluster_5-Cluster_2, #
+                                 #Cluster_4-Cluster_3, Cluster_5-Cluster_3,#
+                                 #Cluster_4-Cluster_5,#
+                                  "Cluster_1-(Cluster_2 + Cluster_3 + Cluster_4 + Cluster_5)/4",#
+                                  "Cluster_2-(Cluster_1 + Cluster_3 + Cluster_4 + Cluster_5)/4",#
+                                  "Cluster_3-(Cluster_1 + Cluster_2 + Cluster_4 + Cluster_5)/4",#
+                                  "Cluster_4-(Cluster_1 + Cluster_2 + Cluster_3 + Cluster_5)/4",#
+                                  "Cluster_5-(Cluster_1 + Cluster_2 + Cluster_3 + Cluster_4)/4",#
+                                 levels=design)#
+##### #
+fit1 <- lmFit(mat, design)#
+fit2 <- contrasts.fit(fit1, contrast.matrix)#
+fit <- eBayes(fit2)
+tt <- topTable(fit, coef=1, number=Inf, genelist=rownames(geneExpr3))
+head (tt)

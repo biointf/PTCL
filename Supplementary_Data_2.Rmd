@@ -1,7 +1,13 @@
 ---
 title: "RNAseq Validation Set"
-subtitle: Validation of the 19-genes model on the palomero et al (Nat Gen 2014) RNAseq - dbGap phs000689.v1.p1 
+subtitle: Validation of the 19-genes model on the palomero et al (Nat Gen 2014) RNAseq - dbGap phs000689.v1.p1
   series
+author:
+    - affiliation: University of Milan
+      name: Luca Agnelli
+    - affiliation: Wellcome Trust Sanger Institute, UK and University of Milan, IT
+      name: Francesco Maura
+    date: "2018/07/18"
 output:
   html_document: default
   html_notebook: default
@@ -73,7 +79,7 @@ You can also embed plots, for example:
 ```{r}
 
 #################################################################################################################
-  
+
 ### https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#starting-from-count-matrices   
 
 #################################################################################################################
@@ -142,9 +148,9 @@ d = sweep(d,1, apply(d,1,median,na.rm=T))
 results = ConsensusClusterPlus(d,maxK=8,
                                pFeature=1,
                                clusterAlg="hc",
-                               innerLinkage="ward.D2", 
-                               finalLinkage="ward.D2", 
-                               distance="euclidean", 
+                               innerLinkage="ward.D2",
+                               finalLinkage="ward.D2",
+                               distance="euclidean",
                                seed=123456789)
 kk<- as.data.frame((results[[5]]$consensusClass)) ##### 4 significant cluster
 kk$Sample<- rownames(kk)
@@ -185,4 +191,3 @@ library(pheatmap)
 pheatmap(as.matrix( (edata)), annotation_col=annotation_col, annotation_colors = ann_colors, border_color="NA")
 
 ```
-
