@@ -3,14 +3,14 @@ title: "RNAseq Validation Set"
 subtitle: Validation of the 19-genes model on the palomero et al (Nat Gen 2014) RNAseq - dbGap phs000689.v1.p1
   series
 author:
-    - affiliation: University of Milan
-      name: Luca Agnelli
-    - affiliation: Wellcome Trust Sanger Institute, UK and University of Milan, IT
-      name: Francesco Maura
-    date: "2018/07/18"
+- affiliation: University of Milan
+  name: Luca Agnelli
+- affiliation: Wellcome Trust Sanger Institute, UK and University of Milan, IT
+  name: Francesco Maura
+date: "2018/07/18"
 output:
-  html_document: default
   html_notebook: default
+  html_document: default
 ---
 Built with R version:  
 `r getRversion()`
